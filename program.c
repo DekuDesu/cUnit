@@ -41,22 +41,31 @@ bool ShouldFail(FILE* stream)
 	size_t expected = 12;
 	size_t actual = 24;
 
-	Equals(expected, actual, "%lli");
+	Equals(expected, actual, "%lli"); // this should fail
 
 	return true;
 }
 
 bool RunTests()
 {
+	// Create a test suite to add our test methods onto
+	// we could chose any name for this collection of tests but i'll settle for the file name
 	TestSuite suite = CreateSuite(__FILE__);
 
+	// by default we output test results to stdout, but we could override it with
+	suite->OutputStream = stdout;
+
+	// add our test methods
 	suite->Append(suite, "Should Pass", &ExampleTest);
 	suite->Append(suite, "Should Fail", &ShouldFail);
 
+	// run our tests and store whether or not all tests passed
 	bool pass = suite->Run(suite);
 
+	// dispose of any unmanaged resources
 	suite->Dispose(suite);
 
+	// return to caller whether or not all of the tests passed
 	return pass;
 }
 
